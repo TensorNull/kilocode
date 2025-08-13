@@ -545,6 +545,7 @@ export const webviewMessageHandler = async (
 				unbound: {},
 				litellm: {},
 				"kilocode-openrouter": {}, // kilocode_change
+				cometapi: {}, // kilocode_change
 				ollama: {},
 				lmstudio: {},
 			}
@@ -576,6 +577,14 @@ export const webviewMessageHandler = async (
 				{
 					key: "kilocode-openrouter",
 					options: { provider: "kilocode-openrouter", kilocodeToken: apiConfiguration.kilocodeToken },
+				},
+				{
+					key: "cometapi",
+					options: {
+						provider: "cometapi",
+						apiKey: apiConfiguration.cometApiKey,
+						baseUrl: apiConfiguration.cometApiBaseUrl,
+					},
 				},
 				{ key: "ollama", options: { provider: "ollama", baseUrl: apiConfiguration.ollamaBaseUrl } },
 			]

@@ -37,6 +37,7 @@ type ModelIdKey = keyof Pick<
 	| "openAiModelId"
 	| "litellmModelId"
 	| "kilocodeModel"
+	| "cometApiModelId"
 >
 
 interface ModelPickerProps {
@@ -49,6 +50,7 @@ interface ModelPickerProps {
 	setApiConfigurationField: <K extends keyof ProviderSettings>(field: K, value: ProviderSettings[K]) => void
 	organizationAllowList: OrganizationAllowList
 	errorMessage?: string
+	hideDescription?: boolean
 }
 
 export const ModelPicker = ({
@@ -61,6 +63,7 @@ export const ModelPicker = ({
 	setApiConfigurationField,
 	// organizationAllowList, // kilocode_change: unused
 	errorMessage,
+	hideDescription = false,
 }: ModelPickerProps) => {
 	const { t } = useAppTranslation()
 
@@ -119,13 +122,10 @@ export const ModelPicker = ({
 
 	useEffect(() => {
 		if (!selectedModelId && !isInitialized.current) {
-			const initialValue =
-				selectedModelId && modelIds.includes(selectedModelId) ? selectedModelId : defaultModelId
-			setApiConfigurationField(modelIdKey, initialValue)
+			setApiConfigurationField(modelIdKey, defaultModelId)
+			isInitialized.current = true
 		}
-
-		isInitialized.current = true
-	}, [modelIds, setApiConfigurationField, modelIdKey, selectedModelId, defaultModelId])
+	}, [setApiConfigurationField, modelIdKey, selectedModelId, defaultModelId])
 
 	// Cleanup timeouts on unmount to prevent test flakiness
 	useEffect(() => {
@@ -236,25 +236,27 @@ export const ModelPicker = ({
 					setIsDescriptionExpanded={setIsDescriptionExpanded}
 				/>
 			)}
-			<div className="text-sm text-vscode-descriptionForeground">
-				{
-					/*kilocode_change start*/
-					apiConfiguration.apiProvider === "kilocode" ? (
-						<Trans i18nKey="kilocode:settings.provider.automaticFetch" />
-					) : (
-						<Trans
-							i18nKey="settings:modelPicker.automaticFetch"
-							components={{
-								serviceLink: <VSCodeLink href={serviceUrl} className="text-sm" />,
-								defaultModelLink: (
-									<VSCodeLink onClick={() => onSelect(defaultModelId)} className="text-sm" />
-								),
-							}}
-							values={{ serviceName, defaultModelId }}
-						/>
-					) /*kilocode_change end*/
-				}
-			</div>
+			{!hideDescription && (
+				<div className="text-sm text-vscode-descriptionForeground">
+					{
+						/*kilocode_change start*/
+						apiConfiguration.apiProvider === "kilocode" ? (
+							<Trans i18nKey="kilocode:settings.provider.automaticFetch" />
+						) : (
+							<Trans
+								i18nKey="settings:modelPicker.automaticFetch"
+								components={{
+									serviceLink: <VSCodeLink href={serviceUrl} className="text-sm" />,
+									defaultModelLink: (
+										<VSCodeLink onClick={() => onSelect(defaultModelId)} className="text-sm" />
+									),
+								}}
+								values={{ serviceName, defaultModelId }}
+							/>
+						) /*kilocode_change end*/
+					}
+				</div>
+			)}
 		</>
 	)
 }
