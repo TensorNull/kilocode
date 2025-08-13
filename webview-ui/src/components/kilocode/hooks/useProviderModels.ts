@@ -6,7 +6,6 @@ import {
 	bedrockDefaultModelId,
 	bedrockModels,
 	cometApiDefaultModelId,
-	cometApiModels,
 	deepSeekDefaultModelId,
 	deepSeekModels,
 	geminiDefaultModelId,

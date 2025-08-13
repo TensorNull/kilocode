@@ -13,8 +13,7 @@ import {
 import type { RouterModels } from "@roo/api"
 
 import { useAppTranslation } from "@src/i18n/TranslationContext"
-import { VSCodeButtonLink } from "@src/components/common/VSCodeButtonLink"
-import { useSelectedModel } from "@src/components/ui/hooks/useSelectedModel"
+import { VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 
 import { inputEventTransform } from "../transforms"
 
@@ -44,9 +43,6 @@ export const CometAPI = ({
 	const { t } = useAppTranslation()
 
 	const [cometApiBaseUrlSelected, setCometApiBaseUrlSelected] = useState(!!apiConfiguration?.cometApiBaseUrl)
-
-	// Get current selected model information for debugging
-	const { id: selectedModelId, info: selectedModelInfo } = useSelectedModel(apiConfiguration)
 
 	// Get dynamic models from router with API key and base URL as query dependencies
 	const routerModels = useRouterModels({
@@ -88,7 +84,7 @@ export const CometAPI = ({
 						i18nKey="settings:providers.cometapi.description"
 						defaults="Access 500+ models through CometAPI's unified interface. Get your API key from https://api.cometapi.com/console/token"
 						components={{
-							link: <VSCodeButtonLink href="https://cometapi.com">cometapi.com</VSCodeButtonLink>,
+							link: <VSCodeLink href="https://cometapi.com">cometapi.com</VSCodeLink>,
 						}}
 					/>
 				</p>
@@ -146,6 +142,7 @@ export const CometAPI = ({
 				serviceUrl="https://cometapi.com/models"
 				organizationAllowList={organizationAllowList}
 				errorMessage={modelValidationError}
+				hideDescription={true}
 			/>
 
 			{!fromWelcomeView && (
@@ -162,9 +159,7 @@ export const CometAPI = ({
 							defaults="See <link>CometAPI documentation</link> for supported models and pricing."
 							components={{
 								link: (
-									<VSCodeButtonLink href="https://docs.cometapi.com">
-										CometAPI documentation
-									</VSCodeButtonLink>
+									<VSCodeLink href="https://api.cometapi.com/doc">CometAPI documentation</VSCodeLink>
 								),
 							}}
 						/>
