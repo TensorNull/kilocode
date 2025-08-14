@@ -55,7 +55,6 @@ export const PROVIDERS = [
 	{ value: "cometapi", label: "CometAPI" },
 	{ value: "gemini", label: "Google Gemini" },
 	{ value: "doubao", label: "Doubao" },
-	{ value: "fireworks", label: "Fireworks AI" },
 	// kilocode_change start
 	{ value: "gemini-cli", label: "Gemini CLI" },
 	{ value: "virtual-quota-fallback", label: "Virtual Quota Fallback" },
