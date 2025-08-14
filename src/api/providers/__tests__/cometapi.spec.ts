@@ -78,7 +78,7 @@ describe("CometAPIHandler", () => {
 			const handler = new CometAPIHandler({ cometApiModelId: "nonexistent/model" })
 			const result = await handler.fetchModel()
 			expect(result.id).toBe("nonexistent/model")
-			expect(result.info.description).toBe("Anthropic's Claude 3.5 Sonnet via CometAPI")
+			expect(result.info.description).toBe("Default CometAPI model")
 		})
 	})
 
@@ -135,6 +135,7 @@ describe("CometAPIHandler", () => {
 						{ role: "system", content: "test system prompt" },
 						{ role: "user", content: "test message" },
 					],
+
 					model: "claude-sonnet-4-20250514", // Use the actual model ID from mockOptions
 					stream: true,
 					stream_options: { include_usage: true },
@@ -143,7 +144,9 @@ describe("CometAPIHandler", () => {
 			)
 		})
 
+
 		it("handles API errors directly", async () => {
+
 			const handler = new CometAPIHandler(mockOptions)
 			const mockStream = {
 				async *[Symbol.asyncIterator]() {
@@ -197,7 +200,9 @@ describe("CometAPIHandler", () => {
 			})
 		})
 
+
 		it("handles API errors directly", async () => {
+
 			const handler = new CometAPIHandler(mockOptions)
 			const mockError = {
 				error: {
@@ -211,10 +216,12 @@ describe("CometAPIHandler", () => {
 				completions: { create: mockCreate },
 			} as any
 
+
 			await expect(handler.completePrompt("test prompt")).rejects.toThrow("CometAPI Error 500: API Error")
 		})
 
 		it("handles unexpected errors directly", async () => {
+
 			const handler = new CometAPIHandler(mockOptions)
 			const mockCreate = vitest.fn().mockRejectedValue(new Error("Unexpected error"))
 			;(OpenAI as any).prototype.chat = {
@@ -249,5 +256,6 @@ describe("CometAPIHandler", () => {
 			await expect(handler.completePrompt("test prompt")).rejects.toThrow("THROTTLING error in completePrompt")
 			expect(mockCreate).toHaveBeenCalledTimes(1) // No retry, called only once
 		})
+
 	})
 })
