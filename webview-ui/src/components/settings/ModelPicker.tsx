@@ -27,6 +27,7 @@ import { useEscapeKey } from "@src/hooks/useEscapeKey"
 
 import { ModelInfoView } from "./ModelInfoView"
 import { ApiErrorMessage } from "./ApiErrorMessage"
+import { KiloModelInfoView } from "../kilocode/settings/KiloModelInfoView"
 
 type ModelIdKey = keyof Pick<
 	ProviderSettings,
@@ -74,7 +75,10 @@ export const ModelPicker = ({
 	const selectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 	const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-	const modelIds = usePreferredModels(models) // kilocode_change
+	// kilocode_change start
+	const modelIds = usePreferredModels(models)
+	const [isPricingExpanded, setIsPricingExpanded] = useState(false)
+	// kilocode_change end
 
 	const { id: selectedModelId, info: selectedModelInfo } = useSelectedModel(apiConfiguration)
 
@@ -227,6 +231,7 @@ export const ModelPicker = ({
 				</Popover>
 			</div>
 			{errorMessage && <ApiErrorMessage errorMessage={errorMessage} />}
+
 			{selectedModelId && selectedModelInfo && (
 				<ModelInfoView
 					apiProvider={apiConfiguration.apiProvider}
@@ -257,6 +262,7 @@ export const ModelPicker = ({
 					}
 				</div>
 			)}
+
 		</>
 	)
 }
