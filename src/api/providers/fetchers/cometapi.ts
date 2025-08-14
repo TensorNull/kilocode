@@ -80,6 +80,7 @@ export async function getCometAPIModels(options?: ApiHandlerOptions): Promise<Re
 	}
 
 	try {
+		// Fetch models directly
 		const response = await fetch(`${baseURL}/models`, {
 			method: "GET",
 			headers: {
@@ -94,16 +95,16 @@ export async function getCometAPIModels(options?: ApiHandlerOptions): Promise<Re
 		}
 
 		const data = await response.json()
-		const result = cometApiModelsResponseSchema.safeParse(data)
+		const parseResult = cometApiModelsResponseSchema.safeParse(data)
 
-		if (!result.success) {
-			console.error("CometAPI models response is invalid", result.error.format())
+		if (!parseResult.success) {
+			console.error("CometAPI models response is invalid", parseResult.error.format())
 			console.warn("CometAPI: Falling back to static model definitions")
 			return cometApiModels
 		}
 
 		// Parse API response and convert to ModelInfo format
-		for (const model of result.data.data) {
+		for (const model of parseResult.data.data) {
 			// Filter out image generation models - we only want text generation models
 			if (!isTextGenerationModel(model.id)) {
 				continue

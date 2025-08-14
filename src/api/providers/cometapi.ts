@@ -80,6 +80,8 @@ export class CometAPIHandler extends BaseProvider implements SingleCompletionHan
 
 		let stream
 		const requestOptions = this.customRequestOptions(metadata)
+
+		// Create completion stream
 		stream = await this.client.chat.completions.create(
 			completionParams,
 			...(requestOptions ? [requestOptions] : []),
@@ -153,15 +155,15 @@ export class CometAPIHandler extends BaseProvider implements SingleCompletionHan
 			stream: false,
 		}
 
-		const response = await this.client.chat.completions.create(completionParams)
+		// Create completion
+		const completion = await this.client.chat.completions.create(completionParams)
 
-		if ("error" in response) {
-			const error = response.error as { message?: string; code?: number }
+		if ("error" in completion) {
+			const error = completion.error as { message?: string; code?: number }
 			throw new Error(`CometAPI Error ${error?.code}: ${error?.message}`)
 		}
 
-		const completion = response as OpenAI.Chat.ChatCompletion
-		return completion.choices[0]?.message?.content || ""
+		return (completion as OpenAI.Chat.ChatCompletion).choices[0]?.message?.content || ""
 	}
 }
 
