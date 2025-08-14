@@ -142,7 +142,6 @@ export const CometAPI = ({
 				serviceUrl="https://cometapi.com/models"
 				organizationAllowList={organizationAllowList}
 				errorMessage={modelValidationError}
-				hideDescription={true}
 			/>
 
 			{!fromWelcomeView && (
