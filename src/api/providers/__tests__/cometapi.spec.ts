@@ -6,8 +6,10 @@ vitest.mock("vscode", () => ({}))
 import OpenAI from "openai"
 import { Anthropic } from "@anthropic-ai/sdk"
 
+import { describe, it, expect, vi, beforeEach } from "vitest"
 import { CometAPIHandler } from "../cometapi"
 import type { ApiHandlerOptions } from "../../../shared/api"
+import { cometApiModels, cometApiDefaultModelId } from "@roo-code/types"
 import { Package } from "../../../shared/package"
 
 // Mock dependencies
@@ -78,7 +80,7 @@ describe("CometAPIHandler", () => {
 			const handler = new CometAPIHandler({ cometApiModelId: "nonexistent/model" })
 			const result = await handler.fetchModel()
 			expect(result.id).toBe("nonexistent/model")
-			expect(result.info.description).toBe("Default CometAPI model")
+			expect(result.info.description).toBe(cometApiModels[cometApiDefaultModelId].description)
 		})
 	})
 
@@ -144,9 +146,7 @@ describe("CometAPIHandler", () => {
 			)
 		})
 
-
 		it("handles API errors directly", async () => {
-
 			const handler = new CometAPIHandler(mockOptions)
 			const mockStream = {
 				async *[Symbol.asyncIterator]() {
@@ -200,9 +200,7 @@ describe("CometAPIHandler", () => {
 			})
 		})
 
-
 		it("handles API errors directly", async () => {
-
 			const handler = new CometAPIHandler(mockOptions)
 			const mockError = {
 				error: {
@@ -216,12 +214,10 @@ describe("CometAPIHandler", () => {
 				completions: { create: mockCreate },
 			} as any
 
-
 			await expect(handler.completePrompt("test prompt")).rejects.toThrow("CometAPI Error 500: API Error")
 		})
 
 		it("handles unexpected errors directly", async () => {
-
 			const handler = new CometAPIHandler(mockOptions)
 			const mockCreate = vitest.fn().mockRejectedValue(new Error("Unexpected error"))
 			;(OpenAI as any).prototype.chat = {
@@ -256,6 +252,5 @@ describe("CometAPIHandler", () => {
 			await expect(handler.completePrompt("test prompt")).rejects.toThrow("THROTTLING error in completePrompt")
 			expect(mockCreate).toHaveBeenCalledTimes(1) // No retry, called only once
 		})
-
 	})
 })
